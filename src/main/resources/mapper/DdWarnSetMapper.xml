@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dreamdeck.irrigation.biz.mapper.DdWarnSetMapper">
+
+    <resultMap id="BaseResultMap" type="cn.dreamdeck.irrigation.api.entity.DdWarnSet">
+        <id column="log_id"  property="logId" />
+        <result column="device_id"  property="deviceId" />
+        <result column="end_ytd"  property="type" />
+        <result column="start_hms"  property="maxmum" />
+        <result column="end_hms"  property="minMum" />
+    </resultMap>
+    
+    <select id="getByDeviceId" resultMap="BaseResultMap">
+        SELECT
+            log_id,
+            device_id,
+            `type`,
+            maximum,
+            minimum
+        FROM
+            dd_date_warn_set
+        WHERE
+            device_id = #{deviceId} and type = #{type}
+	</select>
+
+</mapper>

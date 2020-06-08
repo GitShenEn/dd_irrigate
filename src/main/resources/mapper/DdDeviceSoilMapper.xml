@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dreamdeck.irrigation.biz.mapper.DdDeviceSoilMapper">
+
+
+
+    <resultMap id="baseResultMap" type="cn.dreamdeck.irrigation.api.vo.DdDeviceSoilVo">
+        <result property="deviceId" column="device_id"/>
+        <result property="waterId" column="water_id"/>
+        <result property="name" column="name"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+    <select id="getList" resultMap="baseResultMap">
+        select * from dd_device_soil where del_flag = '0' order by create_time desc
+    </select>
+
+</mapper>

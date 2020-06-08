@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dreamdeck.irrigation.biz.mapper.DdCmdMapper">
+
+    <resultMap id="BaseResultMap" type="cn.dreamdeck.irrigation.api.entity.DdCmd">
+        <id column="cmd_id" jdbcType="VARCHAR" property="cmdId" />
+        <result column="device_id"  property="deviceId" />
+        <result column="cmd_type"  property="cmdType" />
+        <result column="name"  property="name" />
+        <result column="cmd_data"  property="cmdData" />
+        <result column="decimal"  property="decimal" />
+        <result column="start"  property="start" />
+        <result column="end"  property="end" />
+        <result column="status"  property="status" />
+    </resultMap>
+
+    <select id="getByDeviceId" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            dd_cmd
+        WHERE
+            device_id = #{deviceId}
+    </select>
+
+    <delete id="delByDeviceId">
+        DELETE
+        FROM
+            dd_cmd
+        WHERE
+            device_id = #{deviceId}
+    </delete>
+
+
+</mapper>

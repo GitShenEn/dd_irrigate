@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dreamdeck.irrigation.biz.mapper.DdDistrictGroupMapper">
+
+
+    <resultMap id="resultMap" type="cn.dreamdeck.irrigation.api.entity.DdDistrictGroup">
+        <result property="ID" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="districtId" column="district_id"/>
+        <result property="rank" column="rank"/>
+    </resultMap>
+
+    <resultMap id="baseResultMap" type="cn.dreamdeck.irrigation.api.vo.DistrictGroupVo">
+        <result property="ID" column="id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="groupId" column="group_id"/>
+        <result property="districtName" column="district_name"/>
+        <result property="rank" column="rank"/>
+    </resultMap>
+
+    <select id="selectByDis" resultMap="baseResultMap">
+        SELECT
+            a.id AS id,
+            group_name,
+            a.group_id as group_id,
+            district_name,
+            rank
+        FROM
+            dd_district_group a
+            JOIN dd_district b ON a.district_id = b.district_id
+            JOIN dd_group c ON a.group_id = c.group_id
+        WHERE
+            a.district_id = #{districtId}
+    </select>
+
+    <select id="selectByGroup" resultMap="resultMap">
+        select
+           *
+        from
+          dd_district_group
+         where
+          group_id = #{groupId}
+    </select>
+
+    <select id="selectByRank" resultMap="resultMap">
+        SELECT
+            *
+        FROM
+            dd_district_group
+        WHERE district_id = #{districtId}
+             AND rank &gt;#{rank}
+        ORDER BY
+	        rank
+    </select>
+
+    <delete id="delByDis">
+        delete from dd_district_group where district_id = #{districtId}
+    </delete>
+
+</mapper>

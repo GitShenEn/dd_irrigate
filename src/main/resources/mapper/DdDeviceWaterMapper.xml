@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dreamdeck.irrigation.biz.mapper.DdDeviceWaterMapper">
+
+    <resultMap id="baseResultMap" type="cn.dreamdeck.irrigation.api.vo.WaterVo">
+        <result property="deviceId" column="device_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="status" column="status"/>
+        <result property="isOpen" column="is_open"/>
+        <result property="subsetId" column="subset_id"/>
+        <result property="nozzleNum" column="nozzle_num"/>
+        <result property="irrigationArea" column="irrigation_area"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="baseResultMap">
+        SELECT
+          a.*,
+          b.group_id
+        FROM
+        dd_device_water a
+        left join dd_group_water b on a.device_id = b.device_id
+        WHERE
+        a.del_flag = '0'
+        and a.`type` in (0,1)
+        <if test="type == 1">
+            and a.device_id in (select device_id from dd_group_water )
+        </if>
+        <if test="type == 2">
+            and a.device_id not in (select device_id from dd_group_water )
+        </if>
+        ORDER BY
+        substring_index( a.device_name, "#",- 1 )
+    </select>
+
+    <select id="selectSwitch" resultType="java.lang.Integer">
+        select  COALESCE (  count(*), 0 ) from dd_data_switch
+        where switch_type = 1
+        and device_id = #{deviceId}
+        <if test="time != null">
+            and  date_format( create_time, '%Y-%m' ) = #{time}
+        </if>
+    </select>
+
+
+
+</mapper>

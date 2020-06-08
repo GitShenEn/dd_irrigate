@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dreamdeck.irrigation.biz.mapper.DdWarnLogMapper">
+
+
+    <resultMap id="baseResultMap" type="cn.dreamdeck.irrigation.api.vo.WarnLogVo">
+        <result property="logId" column="log_id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="type" column="type"/>
+        <result property="classify" column="classify"/>
+        <result property="status" column="status"/>
+        <result property="value" column="value"/>
+        <result property="createTime" column="create_time"/>
+        <result property="disposeTime" column="dispose_time"/>
+        <result property="responseTime" column="response_time"/>
+        <result property="disposePeople" column="dispose_people"/>
+        <result property="dictName" column="dict_name"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="getList" resultMap="baseResultMap" parameterType="cn.dreamdeck.irrigation.api.dto.WarnDto">
+        SELECT
+        a.log_id,
+        a.device_id,
+        a.device_name,
+        a.type,
+        a.classify,
+        a.`status`,
+        a.`value`,
+        a.create_time,
+        a.dispose_time,
+        a.response_time,
+        a.dispose_people,
+        b.dict_name,
+        b.remark
+        FROM
+        dd_date_warn_log a
+        JOIN sys_dict_warn b ON a.type = b.dict_code
+        <where>
+            <if test="warnDto.startTime!=null and warnDto.startTime!='' ">
+                and  date_format(a.create_time,'%Y-%m-%d') &gt;= #{warnDto.startTime}
+            </if>
+            <if test="warnDto.endTime!=null and warnDto.endTime!='' ">
+                and date_format(a.create_time,'%Y-%m-%d') &lt;= #{warnDto.endTime}
+            </if>
+            <if test="warnDto.classify!=null">
+                and  a.classify = #{warnDto.classify}
+            </if>
+            <if test="warnDto.type!=null">
+                and  a.type = #{warnDto.type}
+            </if>
+            <if test="warnDto.status!=null and warnDto.status!='' ">
+                and  a.`status` = #{warnDto.status}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getNum" resultType="java.lang.Integer">
+        SELECT
+        COALESCE ( count(*), 0 ) as `count`
+        FROM
+        dd_date_warn_log
+        <where>
+            <if test="time!=null">
+                and date_format( create_time, '%Y-%m-%d' ) = #{time}
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="getByDeviceStatus" resultType="java.lang.Integer">
+       SELECT
+            COALESCE ( count(*), 0 ) as `count`
+        FROM
+            dd_date_warn_log
+        WHERE
+            device_id = #{deviceId} and `type` = #{type} and status in (1,4)
+    </select>
+
+</mapper>
